@@ -5,7 +5,7 @@ import Dashboard from "./pages/Dashboard";
 import AddFee from "./pages/AddFee";
 import AddExpense from "./pages/AddExpense";
 import Report from "./pages/Report";
-import Footer from "./pages/footer";
+import Footer from "./pages/Footer";
 import "./index.css";
 function Layout({ children }) {
   const token = localStorage.getItem("token");
