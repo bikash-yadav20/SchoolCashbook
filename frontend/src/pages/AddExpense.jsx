@@ -76,7 +76,7 @@ export default function AddExpense() {
             <input
               value={reason}
               onChange={(e) => setReason(e.target.value)}
-              placeholder="e.g. Stationery purchase, cleaning charges"
+              placeholder="e.g. Stationery purchase, Advance salary, Bills"
               className="w-full border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:border-blue-600"
             />
           </div>

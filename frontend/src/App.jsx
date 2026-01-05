@@ -53,7 +53,7 @@ function Layout({ children }) {
               to="/report"
               className="hover:text-red-600 border-b-2 border-transparent hover:border-red-600 pb-1 transition"
             >
-              Date-wise Report
+              Report
             </Link>
           </nav>
 

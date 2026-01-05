@@ -104,7 +104,7 @@ export default function AddFee() {
             <input
               value={reason}
               onChange={(e) => setReason(e.target.value)}
-              placeholder="e.g., Nishant Yadav - Class X - Uniform Fees"
+              placeholder="e.g., Monthly Fees, Uniform Fees, Admit"
               className="w-full border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:border-blue-600"
             />
           </div>
