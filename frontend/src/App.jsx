@@ -7,6 +7,7 @@ import AddExpense from "./pages/AddExpense";
 import Report from "./pages/Report";
 import Footer from "./pages/Footer";
 import "./index.css";
+import Ledger from "./pages/Ledger";
 function Layout({ children }) {
   const token = localStorage.getItem("token");
 
@@ -54,6 +55,12 @@ function Layout({ children }) {
               className="hover:text-red-600 border-b-2 border-transparent hover:border-red-600 pb-1 transition"
             >
               Report
+            </Link>
+            <Link
+              to="/ledger"
+              className="hover:text-red-600 border-b-2 border-transparent hover:border-red-600 pb-1 transition"
+            >
+              Ledger
             </Link>
           </nav>
 
@@ -118,6 +125,16 @@ export default function App() {
             <ProtectedRoute>
               <Layout>
                 <Report />
+              </Layout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/ledger"
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <Ledger />
               </Layout>
             </ProtectedRoute>
           }

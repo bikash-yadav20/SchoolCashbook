@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { getFeesByDate, getFeeTotalsByDate } from "../api/fees";
 import { getExpensesByDate, getExpenseTotalsByDate } from "../api/expenses";
+import { openingBalance } from "../api/cashController";
 
 export default function Report() {
   const [date, setDate] = useState(() => new Date().toISOString().slice(0, 10));
@@ -8,27 +9,33 @@ export default function Report() {
   const [expenses, setExpenses] = useState([]);
   const [totals, setTotals] = useState(null);
   const [err, setErr] = useState("");
+  const [closing, setClosing] = useState();
 
   const load = async (d) => {
     setErr("");
     try {
-      const [feesList, feeTotals, expenseList, expenseTotals] =
+      const [feesList, feeTotals, expenseList, expenseTotals, opening] =
         await Promise.all([
           getFeesByDate(d),
           getFeeTotalsByDate(d),
           getExpensesByDate(d),
           getExpenseTotalsByDate(d),
+          openingBalance(d),
         ]);
       setFees(feesList);
       setExpenses(expenseList);
+      setClosing(opening.next_opening_balance);
       setTotals({
         date: d,
         total_fees: feeTotals.total_fees,
         total_cash_received: feeTotals.total_cash,
         total_online_received: feeTotals.total_online,
         total_expenses: expenseTotals.total_expenses,
+        openingBlnc: opening.opening_balance,
         final_cash_in_cashbox:
-          Number(feeTotals.total_cash) - Number(expenseTotals.total_expenses),
+          Number(opening.opening_balance) +
+          Number(feeTotals.total_cash) -
+          Number(expenseTotals.total_expenses),
       });
     } catch {
       setErr("Failed to load report");
@@ -161,10 +168,13 @@ export default function Report() {
             <strong>Date:</strong> {totals.date}
           </p>
           <p className="text-sm">
+            <strong>Opening Cash:</strong> {totals.openingBlnc}
+          </p>
+          <p className="text-sm">
             <strong>Total Fees Received:</strong> ₹ {totals.total_fees}
           </p>
           <p className="text-sm">
-            <strong>Total Cash Received:</strong> ₹ {totals.total_cash_received}
+            <strong>Total Cash Received:</strong> ₹ {totals.total_cash_received}{" "}
           </p>
           <p className="text-sm">
             <strong>Total Online Received:</strong> ₹{" "}
@@ -176,6 +186,12 @@ export default function Report() {
 
           <div className="mt-3 inline-block bg-green-100 text-green-800 px-4 py-2 font-semibold text-sm">
             FINAL CASH IN CASHBOX: ₹ {totals.final_cash_in_cashbox.toFixed(2)}
+            <strong className="text-gray-500 font-bold">
+              (includes opening balance)
+            </strong>
+          </div>
+          <div className="mt-3 inline-block bg-red-100 text-red-800 px-4 py-2 font-semibold text-sm">
+            FINAL CASH AFTER CLOSING: ₹ {closing}
           </div>
         </div>
       )}
