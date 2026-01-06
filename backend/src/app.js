@@ -40,8 +40,8 @@ const start = async () => {
       console.log("Seeded admin: admin/admin123");
     }
 
-    const port = process.env.PORT || 5000;
-    app.listen(port, () => console.log(`Backend running on port ${port}`));
+    const port = process.env.PORT;
+    app.listen(port, '0.0.0.0', () => console.log(`Backend running on port ${port}`));
   } catch (e) {
     console.error("Server failed to start", e);
     process.exit(1);
