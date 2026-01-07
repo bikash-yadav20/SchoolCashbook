@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { startDay, closeDay } from "../api/cashController";
-import { openingBalance } from "../api/cashController";
 
 const Ledger = () => {
   const [date, setDate] = useState(() => new Date().toISOString().slice(0, 10));
@@ -16,9 +15,8 @@ const Ledger = () => {
     const confirmAction = confirm(
       "Are you sure you want to Open Account For the day?"
     );
-    if (!confirmAction) {
-      return;
-    }
+    if (!confirmAction) return;
+
     try {
       const data = await startDay({ date });
       setOpeningBalance(data.opening_balance);
@@ -29,12 +27,18 @@ const Ledger = () => {
 
   const handleCloseDay = async () => {
     setErr("");
+
+    // ✅ Validation: all fields must be filled
+    if (!cashFees || !expenses || !closingCash) {
+      setErr("Please fill in all fields before closing the day.");
+      return;
+    }
+
     const confirmAction = confirm(
       "Are you sure you want to Close Account For the day?"
     );
-    if (!confirmAction) {
-      return;
-    }
+    if (!confirmAction) return;
+
     try {
       const data = await closeDay({
         date,
@@ -59,6 +63,7 @@ const Ledger = () => {
           value={date}
           onChange={(e) => setDate(e.target.value)}
           className="border px-3 py-1.5 text-sm"
+          required
         />
       </div>
 
@@ -82,6 +87,7 @@ const Ledger = () => {
           value={cashFees}
           onChange={(e) => setCashFees(e.target.value)}
           className="border p-2 w-full"
+          required
         />
         <input
           type="number"
@@ -89,6 +95,7 @@ const Ledger = () => {
           value={expenses}
           onChange={(e) => setExpenses(e.target.value)}
           className="border p-2 w-full"
+          required
         />
         <input
           type="number"
@@ -96,6 +103,7 @@ const Ledger = () => {
           value={closingCash}
           onChange={(e) => setClosingCash(e.target.value)}
           className="border p-2 w-full"
+          required
         />
         <button
           onClick={handleCloseDay}
