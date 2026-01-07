@@ -3,11 +3,11 @@ import { startDay, closeDay } from "../api/cashController";
 
 const Ledger = () => {
   const [date, setDate] = useState(() => new Date().toISOString().slice(0, 10));
-  const [openingBalance, setOpeningBalance] = useState(null);
+  const [openingBalance, setOpeningBalance] = useState("");
   const [cashFees, setCashFees] = useState("");
   const [expenses, setExpenses] = useState("");
   const [closingCash, setClosingCash] = useState("");
-  const [nextOpening, setNextOpening] = useState(null);
+  const [nextOpening, setNextOpening] = useState("");
   const [err, setErr] = useState("");
 
   const handleStartDay = async () => {
