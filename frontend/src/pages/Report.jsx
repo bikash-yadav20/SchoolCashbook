@@ -33,7 +33,7 @@ export default function Report() {
         total_cash_received: feeTotals.total_cash,
         total_online_received: feeTotals.total_online,
         total_expenses: expenseTotals.total_expenses,
-        openingBlnc: opening.opening_balance,
+        openingBlnc: Number(opening.opening_balance),
         final_cash_in_cashbox:
           Number(opening.opening_balance) +
           Number(feeTotals.total_cash) -
@@ -176,7 +176,11 @@ export default function Report() {
             <strong>Total Fees Received:</strong> ₹ {totals.total_fees}
           </p>
           <p className="text-sm">
-            <strong>Total Cash Received:</strong> ₹ {totals.total_cash_received}{" "}
+            <strong>Total Cash Received:</strong> ₹{" "}
+            {totals.total_cash_received + totals.openingBlnc}{" "}
+            <strong className="text-gray-500 font-bold">
+              (Includes opening balance)
+            </strong>
           </p>
           <p className="text-sm">
             <strong>Total Online Received:</strong> ₹{" "}

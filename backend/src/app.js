@@ -9,6 +9,7 @@ const feeRoutes = require("./routes/fees");
 const expenseRoutes = require("./routes/expenses");
 const dashboardRoutes = require("./routes/dashboard");
 const cashController = require("./routes/cashController");
+const summery = require("./routes/summery");
 
 const app = express();
 app.use(cors());
@@ -19,6 +20,7 @@ app.use("/api/fees", feeRoutes);
 app.use("/api/expenses", expenseRoutes);
 app.use("/api/dashboard", dashboardRoutes);
 app.use("/api/ledger", cashController);
+app.use("/api/summary", summery);
 
 app.get("/health", (req, res) => res.json({ status: "ok" }));
 
@@ -41,7 +43,9 @@ const start = async () => {
     }
 
     const port = process.env.PORT;
-    app.listen(port, '0.0.0.0', () => console.log(`Backend running on port ${port}`));
+    app.listen(port, "0.0.0.0", () =>
+      console.log(`Backend running on port ${port}`)
+    );
   } catch (e) {
     console.error("Server failed to start", e);
     process.exit(1);
