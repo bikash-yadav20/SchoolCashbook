@@ -25,7 +25,7 @@ export default function Report() {
         ]);
       setFees(feesList);
       setExpenses(expenseList);
-      setCashout(opening.closing_balance);
+      setCashout(Number(opening.closing_balance));
       setClosing(opening.next_opening_balance);
       setTotals({
         date: d,
@@ -193,9 +193,11 @@ export default function Report() {
             </strong>
           </div>
           <div className="flex flex-col">
-            <div className="mt-3 inline-block bg-green-100 text-green-800 px-4 py-2 font-semibold text-sm">
-              CASH OUT: ₹ {totals.final_cash_in_cashbox.toFixed(2)}
+            <div className="mt-3 inline-block bg-blue-100 text-blue-800 px-4 py-2 font-semibold text-sm">
+              CASH OUT:{" "}
+              {cashout === 0 ? "The account is not yet closed" : `₹ ${cashout}`}
             </div>
+
             <div className="mt-3 inline-block bg-red-100 text-red-800 px-4 py-2 font-semibold text-sm">
               FINAL CASH AFTER CLOSING: ₹ {closing}
             </div>
