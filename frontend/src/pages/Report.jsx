@@ -10,6 +10,7 @@ export default function Report() {
   const [totals, setTotals] = useState(null);
   const [err, setErr] = useState("");
   const [closing, setClosing] = useState();
+  const [cashout, setCashout] = useState();
 
   const load = async (d) => {
     setErr("");
@@ -24,6 +25,7 @@ export default function Report() {
         ]);
       setFees(feesList);
       setExpenses(expenseList);
+      setCashout(opening.closing_balance);
       setClosing(opening.next_opening_balance);
       setTotals({
         date: d,
@@ -190,8 +192,13 @@ export default function Report() {
               (includes opening balance)
             </strong>
           </div>
-          <div className="mt-3 inline-block bg-red-100 text-red-800 px-4 py-2 font-semibold text-sm">
-            FINAL CASH AFTER CLOSING: ₹ {closing}
+          <div className="flex flex-col">
+            <div className="mt-3 inline-block bg-green-100 text-green-800 px-4 py-2 font-semibold text-sm">
+              CASH OUT: ₹ {totals.final_cash_in_cashbox.toFixed(2)}
+            </div>
+            <div className="mt-3 inline-block bg-red-100 text-red-800 px-4 py-2 font-semibold text-sm">
+              FINAL CASH AFTER CLOSING: ₹ {closing}
+            </div>
           </div>
         </div>
       )}
