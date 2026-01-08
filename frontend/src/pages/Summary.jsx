@@ -107,7 +107,7 @@ const Summary = () => {
 
   // Chart data for overall totals
   const overallChartData = {
-    labels: ["Total Amounts", "Online Amounts", "Cash Amount", "Expenses"],
+    labels: ["Total Amounts", "Online Amounts", "Cash Amounts", "Expenses"],
     datasets: [
       {
         label: "Overall Summary",
@@ -119,7 +119,7 @@ const Summary = () => {
 
   // Chart data for last 30 days (or selected range)
   const rangeChartData = {
-    labels: ["Amount(online & offline", "Expenses (Range)"],
+    labels: ["Amount(online & offline)", "Expenses (Range)"],
     datasets: [
       {
         label: `Summary (${range.startDate} → ${range.endDate})`,
