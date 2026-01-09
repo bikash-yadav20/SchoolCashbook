@@ -66,7 +66,7 @@ export default function Dashboard() {
           {/* Final Cash */}
           <div className="bg-green-50 border border-green-300 px-4 py-3">
             <p className="text-sm text-green-700 font-medium">
-              FINAL CASH IN CASHBOX <strong className="text-gray-500 font-bold">Not included opening show balance can possibly show in negative, check reports data for acurrate value</strong>
+              FINAL CASH IN CASHBOX <strong className="text-gray-500 font-bold">(Not included opening amount so balance can possibly show in negative, check reports data for acurrate value)</strong>
             </p>
             <p className="text-lg font-bold text-green-800">
               ₹ {summary.today_final_cash_in_cashbox}
