@@ -12,6 +12,9 @@ const cashController = require("./routes/cashController");
 const summery = require("./routes/summery");
 
 const app = express();
+
+app.set("trust proxy", true);
+
 app.use(cors());
 app.use(express.json());
 
