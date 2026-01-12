@@ -15,7 +15,11 @@ const app = express();
 
 app.set("trust proxy", true);
 
-app.use(cors());
+app.use(cors({
+  origin: ["https://school-cashbook-three.vercel.app"],
+  credentials: true
+}));
+
 app.use(express.json());
 
 app.use("/api/auth", authRoutes);
@@ -45,8 +49,8 @@ const start = async () => {
       console.log("Seeded admin: admin/admin123");
     }
 
-    const port = process.env.PORT;
-    app.listen(port, () =>
+    const port = process.env.PORT || 8080;
+    app.listen(port, "0.0.0.0", () =>
       console.log(`Backend running on port ${port}`)
     );
   } catch (e) {
