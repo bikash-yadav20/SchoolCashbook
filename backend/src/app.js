@@ -46,7 +46,7 @@ const start = async () => {
     }
 
     const port = process.env.PORT;
-    app.listen(port, "0.0.0.0", () =>
+    app.listen(port, () =>
       console.log(`Backend running on port ${port}`)
     );
   } catch (e) {
