@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react";
-import { getFeesByDate, getFeeTotalsByDate } from "../api/fees";
-import { getExpensesByDate, getExpenseTotalsByDate } from "../api/expenses";
+import { getFeesByDate, getFeeTotalsByDate, deleteFeeById } from "../api/fees";
+import {
+  getExpensesByDate,
+  getExpenseTotalsByDate,
+  deleteExpense,
+} from "../api/expenses";
 import { openingBalance } from "../api/cashController";
 
 export default function Report() {
@@ -52,6 +56,34 @@ export default function Report() {
     const d = e.target.value;
     setDate(d);
     load(d);
+  };
+
+  //handle delete for fees and expenses
+
+  const handleDeleteExpense = async (id) => {
+    const confirmed = window.confirm(
+      "Are you sure you want to delete this expense?"
+    );
+    if (!confirmed) return;
+    try {
+      await deleteExpense(id);
+      setExpenses((prev) => prev.filter((e) => e.id !== id));
+    } catch (err) {
+      setErr("Failed to delete record");
+    }
+  };
+
+  const handleDeleteFees = async (id) => {
+    const confirmed = window.confirm(
+      "Are you sure you want to delete this Entry?"
+    );
+    if (!confirmed) return;
+    try {
+      await deleteFeeById(id);
+      setFees((prev) => prev.filter((e) => e.id !== id));
+    } catch (err) {
+      setErr("Failed to delete record");
+    }
   };
 
   return (
@@ -109,6 +141,12 @@ export default function Report() {
                     {Number(f.total_amount).toFixed(2)}
                   </td>
                   <td className="px-3 py-2">{f.date}</td>
+                  <button
+                    onClick={() => handleDeleteFees(f.id)}
+                    className="bg-red-600 hover:bg-red-700 text-white px-2 mt-2 cursor-pointer text-sm font-medium rounded"
+                  >
+                    Delete
+                  </button>
                 </tr>
               ))}
               {fees.length === 0 && (
@@ -146,6 +184,12 @@ export default function Report() {
                     {Number(e.expense_amount).toFixed(2)}
                   </td>
                   <td className="px-3 py-2">{e.date}</td>
+                  <button
+                    onClick={() => handleDeleteExpense(e.id)}
+                    className="bg-red-600 hover:bg-red-700 text-white px-2 mt-2 cursor-pointer text-sm font-medium rounded"
+                  >
+                    Delete
+                  </button>
                 </tr>
               ))}
               {expenses.length === 0 && (
