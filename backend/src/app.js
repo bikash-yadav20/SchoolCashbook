@@ -16,12 +16,16 @@ const app = express();
 app.set("trust proxy", true);
 
 app.use(cors({
-  origin: [
-    "https://school-cashbook-three.vercel.app",
-    "https://api.nishifymart.com"
-  ],
+  origin: (origin, callback) => {
+    if (!origin) return callback(null, true); // allow server-to-server requests
+    if (origin.endsWith(".vercel.app") || origin === "https://api.nishifymart.com") {
+      return callback(null, true);
+    }
+    callback(new Error("Not allowed by CORS"));
+  },
   credentials: true
 }));
+
 
 app.use(express.json());
 
