@@ -9,6 +9,7 @@ import Footer from "./pages/Footer";
 import "./index.css";
 import Ledger from "./pages/Ledger";
 import Summary from "./pages/Summary";
+import PasswordReset from "./pages/PasswordReset";
 function Layout({ children }) {
   const token = localStorage.getItem("token");
 
@@ -69,6 +70,12 @@ function Layout({ children }) {
             >
               Summary
             </Link>
+            <Link
+              to="/reset-password"
+              className="hover:text-red-600 border-b-2 border-transparent hover:border-red-600 pb-1 transition"
+            >
+              Change Password
+            </Link>
           </nav>
 
           {/* Logout */}
@@ -96,6 +103,7 @@ export default function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/login" element={<Login />} />
+        <Route path="/reset-password" element={<PasswordReset />} />
         <Route
           path="/"
           element={

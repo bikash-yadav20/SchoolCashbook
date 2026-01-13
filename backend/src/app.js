@@ -15,17 +15,22 @@ const app = express();
 
 app.set("trust proxy", true);
 
-app.use(cors({
-  origin: (origin, callback) => {
-    if (!origin) return callback(null, true); // allow server-to-server requests
-    if (origin.endsWith(".vercel.app") || origin === "https://api.nishifymart.com") {
-      return callback(null, true);
-    }
-    callback(new Error("Not allowed by CORS"));
-  },
-  credentials: true
-}));
-
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (!origin) return callback(null, true); // allow server-to-server requests
+      if (
+        origin.endsWith(".vercel.app") ||
+        origin === "https://api.nishifymart.com" ||
+        origin.startsWith("http://localhost:5173")
+      ) {
+        return callback(null, true);
+      }
+      callback(new Error("Not allowed by CORS"));
+    },
+    credentials: true,
+  })
+);
 
 app.use(express.json());
 
@@ -42,19 +47,6 @@ const start = async () => {
   try {
     await sequelize.authenticate();
     await sequelize.sync(); // For dev; replace with migrations in prod
-
-    // Seed default admin (dev only)
-    const bcrypt = require("bcryptjs");
-    const adminUser = await User.findOne({ where: { username: "admin" } });
-    if (!adminUser) {
-      const hash = await bcrypt.hash("admin123", 10);
-      await User.create({
-        username: "admin",
-        password_hash: hash,
-        role: "admin",
-      });
-      console.log("Seeded admin: admin/admin123");
-    }
 
     const port = process.env.PORT || 8080;
     app.listen(port, "::", () =>

@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { login } from "../api/auth";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function Login() {
-  const [username, setUsername] = useState();
-  const [password, setPassword] = useState();
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const navigate = useNavigate();
+  const navigate = useNavigate("");
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -71,6 +71,9 @@ export default function Login() {
         <p className="mt-4 text-xs text-gray-500 text-center">
           Authorized school staff only
         </p>
+        <Link to="/reset-password" className="font-light text-sm text-gray-700">
+          Change password
+        </Link>
       </div>
     </div>
   );
