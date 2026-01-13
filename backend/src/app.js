@@ -46,8 +46,6 @@ app.get("/health", (req, res) => res.json({ status: "ok" }));
 const start = async () => {
   try {
     await sequelize.authenticate();
-    await sequelize.sync(); // For dev; replace with migrations in prod
-
     const port = process.env.PORT || 8080;
     app.listen(port, "::", () =>
       console.log(`Backend running on port ${port}`)
