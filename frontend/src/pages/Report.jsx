@@ -6,6 +6,7 @@ import {
   deleteExpense,
 } from "../api/expenses";
 import { openingBalance } from "../api/cashController";
+import { togglePinExpense } from "../api/priorities";
 
 export default function Report() {
   const [date, setDate] = useState(() => new Date().toISOString().slice(0, 10));
@@ -61,11 +62,13 @@ export default function Report() {
   //handle delete for fees and expenses
 
   const handleDeleteExpense = async (id) => {
-    const confirmed = window.confirm(
-      "Are you sure you want to delete this expense?"
-    );
-    if (!confirmed) return;
+    const password = window.prompt("Enter your password");
+    if (!password) return;
     try {
+      if (password !== "kaizeno") {
+        alert("Incorrect password");
+        return;
+      }
       await deleteExpense(id);
       setExpenses((prev) => prev.filter((e) => e.id !== id));
     } catch (err) {
@@ -74,15 +77,36 @@ export default function Report() {
   };
 
   const handleDeleteFees = async (id) => {
-    const confirmed = window.confirm(
-      "Are you sure you want to delete this Entry?"
-    );
-    if (!confirmed) return;
+    const password = window.prompt("Enter your password");
+    if (!password) return;
     try {
+      if (password !== "kaizeno") {
+        alert("Incorrect password");
+        return;
+      }
       await deleteFeeById(id);
       setFees((prev) => prev.filter((e) => e.id !== id));
     } catch (err) {
       setErr("Failed to delete record");
+    }
+  };
+
+  //handle pin and unpin for expenses
+
+  const handleTogglePin = async (id) => {
+    const confirmed = window.confirm(
+      "Are you sure you want to pin this Expense?",
+    );
+    if (!confirmed) return;
+    try {
+      const updated = await togglePinExpense(id);
+      setExpenses((prev) =>
+        prev.map((e) =>
+          e.id === id ? { ...e, priority: updated.expense.priority } : e,
+        ),
+      );
+    } catch (error) {
+      setErr("Failed to pin the expense");
     }
   };
 
@@ -129,8 +153,10 @@ export default function Report() {
             </thead>
             <tbody>
               {fees.map((f) => (
-                <tr key={f.id} className="border-t">
-                  <td className="px-3 py-2">{f.reason}</td>
+                <tr key={f.id} className="border-t group">
+                  <td className="px-3 py-2 transition-colors group-hover:text-red-600 group-hover:font-bold">
+                    {f.reason}
+                  </td>
                   <td className="px-3 py-2 text-right">
                     {Number(f.cash_amount).toFixed(2)}
                   </td>
@@ -178,8 +204,21 @@ export default function Report() {
             </thead>
             <tbody>
               {expenses.map((e) => (
-                <tr key={e.id} className="border-t">
-                  <td className="px-3 py-2">{e.reason}</td>
+                <tr key={e.id} className="border-t group">
+                  <button
+                    onClick={() => handleTogglePin(e.id)}
+                    className={`px-2 py-1 rounded text-sm ${
+                      e.priority
+                        ? "bg-yellow-500 text-white"
+                        : "bg-green-500 text-white"
+                    }`}
+                  >
+                    {e.priority ? "Unpin" : "Pin"}
+                  </button>
+
+                  <td className="px-3 py-2 transition-colors group-hover:text-red-600 group-hover:font-bold">
+                    {e.reason}
+                  </td>
                   <td className="px-3 py-2 text-right">
                     {Number(e.expense_amount).toFixed(2)}
                   </td>

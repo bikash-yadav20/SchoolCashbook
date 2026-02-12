@@ -1,4 +1,6 @@
+import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
+import { useState } from "react";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
@@ -10,6 +12,8 @@ import "./index.css";
 import Ledger from "./pages/Ledger";
 import Summary from "./pages/Summary";
 import PasswordReset from "./pages/PasswordReset";
+import Sidebar from "./components/Sidebar";
+import Priorities from "./pages/Priorities";
 function Layout({ children }) {
   const token = localStorage.getItem("token");
 
@@ -19,12 +23,24 @@ function Layout({ children }) {
     window.location.href = "/login";
   };
 
+  const [isActive, setIsActive] = useState(false);
+
   return (
     <div className="min-h-screen flex flex-col">
       {/* NAVBAR */}
       <header className="bg-white border-b border-gray-300">
         <div className="max-w-7xl mx-auto px-6 py-3 flex items-center gap-6">
           {/* App Name */}
+          <button
+            className="bg-red-600 hover:bg-red-400 cursor-pointer p-2 rounded"
+            onClick={() => setIsActive((prev) => !prev)}
+          >
+            {isActive ? (
+              <XMarkIcon className="h-5 w-5 text-white" />
+            ) : (
+              <Bars3Icon className="h-5 w-5 text-white" />
+            )}
+          </button>
           <div className="text-lg font-semibold text-gray-800 border-b-2 border-red-600 pb-1">
             KAIZEN ACADEMY
           </div>
@@ -56,14 +72,14 @@ function Layout({ children }) {
               to="/report"
               className="hover:text-red-600 border-b-2 border-transparent hover:border-red-600 pb-1 transition"
             >
-              Report
+              Ledger
             </Link>
-            <Link
+            {/* <Link
               to="/ledger"
               className="hover:text-red-600 border-b-2 border-transparent hover:border-red-600 pb-1 transition"
             >
-              Ledger
-            </Link>
+              Closing
+            </Link> */}
             <Link
               to="/summary"
               className="hover:text-red-600 border-b-2 border-transparent hover:border-red-600 pb-1 transition"
@@ -91,7 +107,10 @@ function Layout({ children }) {
       </header>
 
       {/* PAGE CONTENT */}
-      <main className="flex-1">{children}</main>
+      <div className="flex flex-1">
+        <Sidebar isActive={isActive} setIsActive={setIsActive} />
+        <main className="flex-1 p-6">{children}</main>
+      </div>
 
       <Footer />
     </div>
@@ -160,6 +179,16 @@ export default function App() {
             <ProtectedRoute>
               <Layout>
                 <Summary />
+              </Layout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/priorities"
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <Priorities />
               </Layout>
             </ProtectedRoute>
           }
