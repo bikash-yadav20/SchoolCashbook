@@ -10,7 +10,6 @@ const expenseRoutes = require("./routes/expenses");
 const dashboardRoutes = require("./routes/dashboard");
 const cashController = require("./routes/cashController");
 const summery = require("./routes/summery");
-const priorityRoutes = require("./routes/priority");
 
 const app = express();
 
@@ -30,7 +29,7 @@ app.use(
       callback(new Error("Not allowed by CORS"));
     },
     credentials: true,
-  }),
+  })
 );
 
 app.use(express.json());
@@ -41,7 +40,6 @@ app.use("/api/expenses", expenseRoutes);
 app.use("/api/dashboard", dashboardRoutes);
 app.use("/api/ledger", cashController);
 app.use("/api/summary", summery);
-app.use("/api/expenses", priorityRoutes);
 
 app.get("/health", (req, res) => res.json({ status: "ok" }));
 
@@ -50,7 +48,7 @@ const start = async () => {
     await sequelize.authenticate();
     const port = process.env.PORT || 8080;
     app.listen(port, "::", () =>
-      console.log(`Backend running on port ${port}`),
+      console.log(`Backend running on port ${port}`)
     );
   } catch (e) {
     console.error("Server failed to start", e);
