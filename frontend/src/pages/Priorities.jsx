@@ -8,7 +8,7 @@ export default function PrioritiesPage() {
 
   const loadPinned = async () => {
     try {
-      const res = await api.get("/expenses/priorities");
+      const res = await api.get("/priorities/priorities");
       setPinnedExpenses(res.data);
     } catch {
       setErr("Failed to load pinned expenses");

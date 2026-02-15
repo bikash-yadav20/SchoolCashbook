@@ -41,7 +41,7 @@ app.use("/api/expenses", expenseRoutes);
 app.use("/api/dashboard", dashboardRoutes);
 app.use("/api/ledger", cashController);
 app.use("/api/summary", summery);
-app.use("/api/expenses", priorityRoutes);
+app.use("/api/priorities", priorityRoutes);
 
 app.get("/health", (req, res) => res.json({ status: "ok" }));
 
