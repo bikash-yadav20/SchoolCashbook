@@ -7,6 +7,7 @@ import {
 } from "../api/expenses";
 import { openingBalance } from "../api/cashController";
 import { togglePinExpense } from "../api/priorities";
+import SearchBar from "../components/searchBar";
 
 export default function Report() {
   const [date, setDate] = useState(() => new Date().toISOString().slice(0, 10));
@@ -16,6 +17,7 @@ export default function Report() {
   const [err, setErr] = useState("");
   const [closing, setClosing] = useState();
   const [cashout, setCashout] = useState();
+  const [searchTerm, setSearchTerm] = useState("");
 
   const load = async (d) => {
     setErr("");
@@ -110,6 +112,12 @@ export default function Report() {
     }
   };
 
+  //search logic-----------------
+
+  const filteredFees = fees.filter((f) =>
+    f.reason.toLowerCase().includes(searchTerm.toLowerCase()),
+  );
+
   return (
     <div className="min-h-screen bg-gray-50 px-8 py-6">
       {/* Header */}
@@ -135,6 +143,8 @@ export default function Report() {
 
       {err && <p className="text-red-600 text-sm font-medium mb-4">{err}</p>}
 
+      <SearchBar value={searchTerm} onChange={setSearchTerm} />
+
       {/* Fees Table */}
       <div className="mb-8">
         <h3 className="text-lg font-semibold text-gray-800 mb-3">
@@ -152,7 +162,7 @@ export default function Report() {
               </tr>
             </thead>
             <tbody>
-              {fees.map((f) => (
+              {filteredFees.map((f) => (
                 <tr key={f.id} className="border-t group">
                   <td className="px-3 py-2 transition-colors group-hover:text-red-600 group-hover:font-bold">
                     {f.reason}
