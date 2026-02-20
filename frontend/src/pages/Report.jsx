@@ -7,7 +7,7 @@ import {
 } from "../api/expenses";
 import { openingBalance } from "../api/cashController";
 import { togglePinExpense } from "../api/priorities";
-import SearchBar from "../components/searchBar";
+import SearchBar from "../components/SearchBar";
 
 export default function Report() {
   const [date, setDate] = useState(() => new Date().toISOString().slice(0, 10));
