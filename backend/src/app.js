@@ -22,6 +22,7 @@ app.use(
       if (!origin) return callback(null, true); // allow server-to-server requests
       if (
         origin.endsWith("vercel.app") ||
+        origin ==="https://www.kaizenacademy.online" ||
         origin === "https://api.kaizenacademy.online" ||
         origin.startsWith("http://localhost:5173")
       ) {
