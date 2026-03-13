@@ -21,7 +21,7 @@ app.use(
     origin: (origin, callback) => {
       if (!origin) return callback(null, true); // allow server-to-server requests
       if (
-        origin === "schoolcashbook-production.up.railway.app"||
+        origin === "https://schoolcashbook-production.up.railway.app"||
         origin ==="https://www.kaizenacademy.online" ||
         origin === "https://api.kaizenacademy.online" ||
         origin.startsWith("http://localhost:5173")
