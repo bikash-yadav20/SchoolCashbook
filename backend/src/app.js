@@ -23,6 +23,7 @@ app.use(
       if (
         origin === "https://schoolcashbook-production.up.railway.app"||
         origin ==="https://www.kaizenacademy.online" ||
+        origin ==="https://kaizenacademy.online" ||
         origin === "https://api.kaizenacademy.online" ||
         origin.startsWith("http://localhost:5173")
       ) {
