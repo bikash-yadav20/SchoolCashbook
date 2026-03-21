@@ -44,6 +44,7 @@ app.use("/api/dashboard", dashboardRoutes);
 app.use("/api/ledger", cashController);
 app.use("/api/summary", summery);
 app.use("/api/priorities", priorityRoutes);
+app.use("/api/excel", xlsxExport)
 
 app.get("/health", (req, res) => res.json({ status: "ok" }));
 
