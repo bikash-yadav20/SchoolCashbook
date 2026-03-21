@@ -8,6 +8,7 @@ import {
 import { openingBalance } from "../api/cashController";
 import { togglePinExpense } from "../api/priorities";
 import SearchBar from "../components/SearchBar";
+import XlsxDownload from "../components/XlsxDownload";
 
 export default function Report() {
   const [date, setDate] = useState(() => new Date().toISOString().slice(0, 10));
@@ -177,12 +178,14 @@ export default function Report() {
                     {Number(f.total_amount).toFixed(2)}
                   </td>
                   <td className="px-3 py-2">{f.date}</td>
-                  <button
-                    onClick={() => handleDeleteFees(f.id)}
-                    className="bg-red-600 hover:bg-red-700 text-white px-2 mt-2 cursor-pointer text-sm font-medium rounded"
-                  >
-                    Delete
-                  </button>
+                  <td>
+                    <button
+                      onClick={() => handleDeleteFees(f.id)}
+                      className="bg-red-600 hover:bg-red-700 text-white px-2 mt-2 cursor-pointer text-sm font-medium rounded"
+                    >
+                      Delete
+                    </button>
+                  </td>
                 </tr>
               ))}
               {fees.length === 0 && (
@@ -215,16 +218,18 @@ export default function Report() {
             <tbody>
               {expenses.map((e) => (
                 <tr key={e.id} className="border-t group">
-                  <button
-                    onClick={() => handleTogglePin(e.id)}
-                    className={`px-2 py-1 rounded text-sm ${
-                      e.priority
-                        ? "bg-yellow-500 text-white"
-                        : "bg-green-500 text-white"
-                    }`}
-                  >
-                    {e.priority ? "Unpin" : "Pin"}
-                  </button>
+                  <td>
+                    <button
+                      onClick={() => handleTogglePin(e.id)}
+                      className={`px-2 py-1 rounded text-sm ${
+                        e.priority
+                          ? "bg-yellow-500 text-white"
+                          : "bg-green-500 text-white"
+                      }`}
+                    >
+                      {e.priority ? "Unpin" : "Pin"}
+                    </button>
+                  </td>
 
                   <td className="px-3 py-2 transition-colors group-hover:text-red-600 group-hover:font-bold">
                     {e.reason}
@@ -233,12 +238,14 @@ export default function Report() {
                     {Number(e.expense_amount).toFixed(2)}
                   </td>
                   <td className="px-3 py-2">{e.date}</td>
-                  <button
-                    onClick={() => handleDeleteExpense(e.id)}
-                    className="bg-red-600 hover:bg-red-700 text-white px-2 mt-2 cursor-pointer text-sm font-medium rounded"
-                  >
-                    Delete
-                  </button>
+                  <td>
+                    <button
+                      onClick={() => handleDeleteExpense(e.id)}
+                      className="bg-red-600 hover:bg-red-700 text-white px-2 mt-2 cursor-pointer text-sm font-medium rounded"
+                    >
+                      Delete
+                    </button>
+                  </td>
                 </tr>
               ))}
               {expenses.length === 0 && (
@@ -301,6 +308,8 @@ export default function Report() {
           </div>
         </div>
       )}
+
+      <XlsxDownload date={date} />
     </div>
   );
 }
