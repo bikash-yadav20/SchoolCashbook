@@ -1,6 +1,25 @@
 const { Fee } = require("../models");
 const { feeSchema } = require("../middleware/validate");
 
+//Helper function for data comparison----
+
+const prepare = (text) => {
+  return text
+    .toLowerCase()
+    .replace(/[^a-z0-9\s]/g, "")
+    .split(" ")
+    .sort()
+    .join(" ");
+};
+
+const similarity = (a, b) => {
+  let w1 = prepare(a).split(" ");
+  let w2 = prepare(b).split(" ");
+  let match = w1.filter((w) => w2.includes(w)).length;
+
+  return match / Math.max(w1.length, w2.length);
+};
+
 exports.createFee = async (req, res) => {
   try {
     const { error, value } = feeSchema.validate(req.body);
@@ -14,9 +33,29 @@ exports.createFee = async (req, res) => {
         .json({ error: "Online amount cannot exceed total amount" });
     }
     const cash_amount = (Number(total_amount) - Number(online_amount)).toFixed(
-      2
+      2,
     );
 
+    const targetDate = date || new Date().toISOString().slice(0, 10);
+
+    const existingData = await Fee.findAll({
+      where: { date: targetDate },
+    });
+
+    for (let old of existingData) {
+      let sameAmount =
+        Number(old.total_amount) === Number(total_amount) &&
+        Number(old.online_amount) === Number(online_amount);
+
+      let similarData = similarity(old.reason, reason) > 0.7;
+
+      if (sameAmount && similarData) {
+        return res.status(409).json({
+          warning: "⚠️ Simillar Entry already exists",
+          existing: old,
+        });
+      }
+    }
     const row = await Fee.create({
       total_amount,
       online_amount,
@@ -62,7 +101,7 @@ exports.totalsByDate = async (req, res) => {
         acc.total_cash += Number(r.cash_amount);
         return acc;
       },
-      { total_fees: 0, total_online: 0, total_cash: 0 }
+      { total_fees: 0, total_online: 0, total_cash: 0 },
     );
     res.json({ date: targetDate, ...totals });
   } catch (e) {
