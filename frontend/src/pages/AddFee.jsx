@@ -1,5 +1,6 @@
 import { useState, useMemo } from "react";
 import { createFee } from "../api/fees";
+import DuplicateWarning from "../components/duplicateWarning";
 
 export default function AddFee() {
   const [total, setTotal] = useState("");
@@ -8,6 +9,9 @@ export default function AddFee() {
   const [date, setDate] = useState(() => new Date().toISOString().slice(0, 10));
   const [msg, setMsg] = useState("");
   const [err, setErr] = useState("");
+
+  const [showPopup, setShowPopup] = useState(false);
+  const [duplicateData, setDuplicateData] = useState(null);
 
   const cash = useMemo(() => {
     const t = parseFloat(total || 0);
@@ -31,6 +35,13 @@ export default function AddFee() {
       setOnline("");
       setReason("");
     } catch (e) {
+      if (e.response?.status === 409) {
+        setDuplicateData(e.response.data.existing);
+        console.log(e.response.data.existing);
+        setShowPopup(true);
+        return;
+      }
+
       setErr(e.response?.data?.error || "Failed to save");
     }
   };
@@ -139,6 +150,11 @@ export default function AddFee() {
           )}
         </div>
       </form>
+      <DuplicateWarning
+        showPopup={showPopup}
+        onClose={() => setShowPopup(false)}
+        existing={duplicateData}
+      />
     </div>
   );
 }
