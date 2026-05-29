@@ -1,4 +1,4 @@
-const { Fee } = require("../models");
+const { Fee, DailyCashBalance } = require("../models");
 const { feeSchema } = require("../middleware/validate");
 
 //Helper function for data comparison----
@@ -26,6 +26,15 @@ exports.createFee = async (req, res) => {
     if (error) return res.status(400).json({ error: error.message });
 
     const { total_amount, online_amount, reason, date } = value;
+
+    const isclosed = await DailyCashBalance.findOne({
+      where: { date: date },
+    });
+    if (isclosed && isclosed.closed) {
+      return res
+        .status(400)
+        .json({ error: "Day is already closed, cannot add fees" });
+    }
 
     if (online_amount > total_amount) {
       return res

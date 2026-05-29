@@ -37,6 +37,7 @@ exports.closeDay = async (req, res) => {
   today.expenses_total = expenses;
   today.closing_balance = closing;
   today.next_opening_balance = nextOpening;
+  today.closed = 1;
 
   await today.save();
 

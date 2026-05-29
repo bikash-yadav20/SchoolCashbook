@@ -17,7 +17,7 @@ exports.login = async (req, res) => {
     const token = jwt.sign(
       { id: user.id, username: user.username, role: user.role },
       process.env.JWT_SECRET,
-      { expiresIn: "12h" }
+      { expiresIn: "12h" },
     );
     res.json({
       token,
@@ -25,6 +25,39 @@ exports.login = async (req, res) => {
     });
   } catch (e) {
     res.status(500).json({ error: "Login failed" });
+  }
+};
+
+//signup-------------------------------
+
+exports.signUp = async (req, res) => {
+  try {
+    const { username, password, role } = req.body;
+    if (!username || !password || !role) {
+      return res.status(400).json({ error: "the fields cannot be empty" });
+    }
+
+    const saltRound = 10;
+    const hashedpassword = await bcrypt.hash(password, saltRound);
+
+    const newUser = await User.create({
+      username,
+      password_hash: hashedpassword,
+      role,
+    });
+
+    res.status(200).json({
+      message: "User created succesfully",
+      User: {
+        id: newUser.id,
+        username: newUser.username,
+        password: newUser.password_hash,
+        role: newUser.role,
+      },
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: " something went wrong" });
   }
 };
 

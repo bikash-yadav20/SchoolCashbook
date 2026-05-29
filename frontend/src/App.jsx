@@ -6,7 +6,7 @@ import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import AddFee from "./pages/AddFee";
 import AddExpense from "./pages/AddExpense";
-import Report from "./pages/Report";
+import Report from "./pages/SalaryReport";
 import Footer from "./pages/Footer";
 import "./index.css";
 import Ledger from "./pages/Ledger";
@@ -14,6 +14,15 @@ import Summary from "./pages/Summary";
 import PasswordReset from "./pages/PasswordReset";
 import Sidebar from "./components/Sidebar";
 import Priorities from "./pages/Priorities";
+import { AuthProvider } from "./contexts/AuthContext";
+import CreateEmployee from "./pages/CreateEmployeePage";
+import EmployeeDetailsPgae from "./pages/EmployeeDetailsPgae";
+import LeaveAndDeductionPage from "./pages/LeaveAndDeductionPage";
+import Emp_deduction from "./components/Emp_deduction";
+import SalaryReport from "./pages/SalaryReport";
+import PayrollSetting from "./pages/PayrollSetting";
+import LedgerReport from "./pages/LedgerReport";
+
 function Layout({ children }) {
   const token = localStorage.getItem("token");
 
@@ -119,81 +128,133 @@ function Layout({ children }) {
 
 export default function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/reset-password" element={<PasswordReset />} />
-        <Route
-          path="/"
-          element={
-            <ProtectedRoute>
-              <Layout>
-                <Dashboard />
-              </Layout>
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/fees"
-          element={
-            <ProtectedRoute>
-              <Layout>
-                <AddFee />
-              </Layout>
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/expense"
-          element={
-            <ProtectedRoute>
-              <Layout>
-                <AddExpense />
-              </Layout>
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/report"
-          element={
-            <ProtectedRoute>
-              <Layout>
-                <Report />
-              </Layout>
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/ledger"
-          element={
-            <ProtectedRoute>
-              <Layout>
-                <Ledger />
-              </Layout>
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/summary"
-          element={
-            <ProtectedRoute>
-              <Layout>
-                <Summary />
-              </Layout>
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/priorities"
-          element={
-            <ProtectedRoute>
-              <Layout>
-                <Priorities />
-              </Layout>
-            </ProtectedRoute>
-          }
-        />
-      </Routes>
-    </BrowserRouter>
+    <AuthProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/reset-password" element={<PasswordReset />} />
+          <Route
+            path="/"
+            element={
+              <ProtectedRoute>
+                <Layout>
+                  <Dashboard />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/fees"
+            element={
+              <ProtectedRoute>
+                <Layout>
+                  <AddFee />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/expense"
+            element={
+              <ProtectedRoute>
+                <Layout>
+                  <AddExpense />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/report"
+            element={
+              <ProtectedRoute>
+                <Layout>
+                  <LedgerReport />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/ledger"
+            element={
+              <ProtectedRoute>
+                <Layout>
+                  <Ledger />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/summary"
+            element={
+              <ProtectedRoute>
+                <Layout>
+                  <Summary />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/priorities"
+            element={
+              <ProtectedRoute>
+                <Layout>
+                  <Priorities />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/create-employee"
+            element={
+              <ProtectedRoute>
+                <Layout>
+                  <CreateEmployee />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/employee-details"
+            element={
+              <ProtectedRoute>
+                <Layout>
+                  <EmployeeDetailsPgae />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/payroll-management"
+            element={
+              <ProtectedRoute>
+                <Layout>
+                  <PayrollSetting />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/leave-&-deductions"
+            element={
+              <ProtectedRoute>
+                <Layout>
+                  <LeaveAndDeductionPage />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/salary-report"
+            element={
+              <ProtectedRoute>
+                <Layout>
+                  <SalaryReport />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+        </Routes>
+      </BrowserRouter>
+    </AuthProvider>
   );
 }

@@ -11,6 +11,10 @@ const dashboardRoutes = require("./routes/dashboard");
 const cashController = require("./routes/cashController");
 const summery = require("./routes/summery");
 const priorityRoutes = require("./routes/priority");
+const employee = require("./routes/employee");
+const leaveRules = require("./routes/leaveRules");
+const deductionRulesRoutes = require("./routes/deductionRulesRoutes");
+const salaryLedgerRoute = require("./routes/salaryLedgerRoute");
 const xlsxExport = require("./routes/xlsxExport");
 
 const app = express();
@@ -22,9 +26,9 @@ app.use(
     origin: (origin, callback) => {
       if (!origin) return callback(null, true); // allow server-to-server requests
       if (
-        origin === "https://schoolcashbook-production.up.railway.app"||
-        origin ==="https://www.kaizenacademy.online" ||
-        origin ==="https://kaizenacademy.online" ||
+        origin === "https://schoolcashbook-production.up.railway.app" ||
+        origin === "https://www.kaizenacademy.online" ||
+        origin === "https://kaizenacademy.online" ||
         origin === "https://api.kaizenacademy.online" ||
         origin.startsWith("http://localhost:5173")
       ) {
@@ -45,13 +49,20 @@ app.use("/api/dashboard", dashboardRoutes);
 app.use("/api/ledger", cashController);
 app.use("/api/summary", summery);
 app.use("/api/priorities", priorityRoutes);
-app.use("/api/excel", xlsxExport)
+app.use("/api/excel", xlsxExport);
+app.use("/api/employee", employee);
+app.use("/api/leave-rules", leaveRules);
+app.use("/api/deduction-rules", deductionRulesRoutes);
+app.use("/api/payroll", salaryLedgerRoute);
+app.use("/api/excel", xlsxExport);
 
 app.get("/health", (req, res) => res.json({ status: "ok" }));
 
 const start = async () => {
   try {
     await sequelize.authenticate();
+    console.log("DB connected");
+    await sequelize.sync();
     const port = process.env.PORT || 8080;
     app.listen(port, "::", () =>
       console.log(`Backend running on port ${port}`),

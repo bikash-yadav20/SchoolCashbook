@@ -1,4 +1,4 @@
-const { Expense } = require("../models");
+const { Expense, DailyCashBalance } = require("../models");
 const { expenseSchema } = require("../middleware/validate");
 
 exports.createExpense = async (req, res) => {
@@ -8,6 +8,14 @@ exports.createExpense = async (req, res) => {
 
     const { expense_amount, reason, date } = value;
 
+    const isClosed = await DailyCashBalance.findOne({
+      where: { date: date },
+    });
+    if (isClosed && isClosed.closed) {
+      return res
+        .status(400)
+        .json({ error: "Day is already closed, cannot add expense" });
+    }
     const row = await Expense.create({
       expense_amount,
       reason,
@@ -42,7 +50,7 @@ exports.totalsByDate = async (req, res) => {
     const rows = await Expense.findAll({ where: { date: targetDate } });
     const total_expenses = rows.reduce(
       (sum, r) => sum + Number(r.expense_amount),
-      0
+      0,
     );
     res.json({ date: targetDate, total_expenses });
   } catch (e) {
