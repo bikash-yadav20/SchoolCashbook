@@ -96,7 +96,7 @@ const Sidebar = ({ isActive, setIsActive }) => {
           </li>
           <li>
             <Link
-              to="/employee-deduction"
+              to="/payroll-management"
               className="block w-full bg-white text-black px-4 py-2 rounded hover:bg-gray-200 transition"
             >
               Manage Payroll
