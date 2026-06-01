@@ -34,6 +34,8 @@ var salaryLedgerRoute = require("./routes/salaryLedgerRoute");
 
 var xlsxExport = require("./routes/xlsxExport");
 
+var employeeSalaryReport = require("./routes/employeeSalartReport");
+
 var app = express();
 app.set("trust proxy", true);
 app.use(cors({
@@ -61,6 +63,7 @@ app.use("/api/employee", employee);
 app.use("/api/leave-rules", leaveRules);
 app.use("/api/deduction-rules", deductionRulesRoutes);
 app.use("/api/payroll", salaryLedgerRoute);
+app.use("/api/employee-salary", employeeSalaryReport);
 app.use("/api/excel", xlsxExport);
 app.get("/health", function (req, res) {
   return res.json({
