@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { allEmployees } from "../api/employee";
 import { createDeduction } from "../api/employeeDeductions";
-import { empSalaryReport } from "../api/employeeSalaryReport";
+import { empSalaryReport } from "../api/employeeSalaryReport.js";
 import { ToastContainer, toast } from "react-toastify";
 
 const EmployeeDetails = () => {

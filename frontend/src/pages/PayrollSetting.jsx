@@ -10,7 +10,7 @@ const PayrollSetting = () => {
       {isActive ? (
         <Periodsetting setIsActive={setIsActive} />
       ) : (
-        <Emp_deduction setIsActive={setIsActive} setIsActive={setIsActive} />
+        <Emp_deduction setIsActive={setIsActive} />
       )}
     </div>
   );
