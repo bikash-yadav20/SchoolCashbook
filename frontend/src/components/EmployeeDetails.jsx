@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { allEmployees } from "../api/employee";
 import { createDeduction } from "../api/employeeDeductions";
+import { empSalaryReport } from "../api/employeeSalaryReport";
+import { ToastContainer, toast } from "react-toastify";
 
 const EmployeeDetails = () => {
   const today = new Date().toISOString().split("T")[0];
@@ -11,6 +13,7 @@ const EmployeeDetails = () => {
   const [selectedEmployee, setSelectedEmployee] = useState(null);
   const [advPopup, setAdvPopup] = useState(false);
   const [reportPopup, setReportPopup] = useState(false);
+  const [salaryReport, setSalaryReport] = useState(null);
   const [empAdvance, setEmpAdvance] = useState({
     employeeId: "",
     advance_amount: "",
@@ -18,6 +21,20 @@ const EmployeeDetails = () => {
     deduction_date: today,
     description: "",
   });
+
+  //gettin salary report by employee id
+  const openReportPopup = async (emp) => {
+    setReportPopup(true);
+    setSelectedEmployee(emp);
+
+    try {
+      const data = await empSalaryReport(emp.employeeId);
+      setSalaryReport(data);
+      console.log(data);
+    } catch (error) {
+      console.error("error fetching salary report", error);
+    }
+  };
 
   // Advance payment -----------------------
   const handleChange = (e) => {
@@ -31,7 +48,7 @@ const EmployeeDetails = () => {
   const saveAdvance = async (advanceData) => {
     try {
       const data = await createDeduction(advanceData);
-      alert("Advance payment succesful");
+      toast.success("Advance payment successfull");
       closeAdvancePopup();
 
       setEmpAdvance({
@@ -43,6 +60,7 @@ const EmployeeDetails = () => {
       });
     } catch (err) {
       console.error({ error: err });
+      toast.error("Failed to save advance payment");
     }
   };
 
@@ -73,11 +91,6 @@ const EmployeeDetails = () => {
   const closeAdvancePopup = () => {
     setAdvPopup(false);
     setSelectedEmployee(null);
-  };
-
-  const openReportPopup = (emp) => {
-    setReportPopup(true);
-    setSelectedEmployee(emp);
   };
 
   const closeReportPopup = () => {
@@ -120,7 +133,7 @@ const EmployeeDetails = () => {
                   <h3 className="text-lg font-semibold text-gray-700">
                     {emp.firstname} {emp.lastname}
                   </h3>
-                  <p className="text-sm text-gray-500">ID: {emp.id}</p>
+                  <p className="text-sm text-gray-500">ID: {emp.employeeId}</p>
                   <div className="mt-2 space-y-1 text-gray-600">
                     <p>
                       <span className="font-medium">Salary:</span> ₹{emp.salary}
@@ -140,6 +153,9 @@ const EmployeeDetails = () => {
 
                 {/* Right Section */}
                 <div className="flex flex-col gap-3">
+                  <button className="px-4 py-2 bg-gray-600 text-white font-semibold rounded-lg shadow hover:bg-gray-700 transition cursor-pointer">
+                    Open Ledger
+                  </button>
                   <button
                     onClick={() => openReportPopup(emp)}
                     className="px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg shadow hover:bg-blue-700 transition cursor-pointer"
@@ -221,7 +237,7 @@ const EmployeeDetails = () => {
         )}
 
         {/* Report Popup */}
-        {reportPopup && selectedEmployee && (
+        {reportPopup && selectedEmployee && salaryReport && (
           <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
             <div className="bg-white rounded-lg shadow-lg max-w-md w-full p-6 border border-gray-200">
               <h3 className="text-xl font-semibold text-gray-800 mb-2">
@@ -233,39 +249,54 @@ const EmployeeDetails = () => {
               <ul className="space-y-2 text-gray-700">
                 <li className="flex justify-between">
                   <span>Absents</span>
-                  <span className="font-medium">9</span>
+                  <span className="font-medium">{salaryReport.absentDays}</span>
                 </li>
                 <li className="flex justify-between">
                   <span>Absent deduction</span>
-                  <span className="text-red-600 font-medium">900</span>
+                  <span className="text-red-600 font-medium">
+                    {salaryReport.absentAmount}
+                  </span>
                 </li>
                 <li className="flex justify-between">
                   <span>Late</span>
-                  <span className="font-medium">2</span>
+                  <span className="font-medium">{salaryReport.lateDays}</span>
                 </li>
                 <li className="flex justify-between">
                   <span>Late deduction</span>
-                  <span className="text-red-600 font-medium">100</span>
+                  <span className="text-red-600 font-medium">
+                    {salaryReport.lateAmount}
+                  </span>
                 </li>
                 <li className="flex justify-between">
                   <span>Advance taken</span>
-                  <span className="text-blue-600 font-medium">1000</span>
+                  <span className="text-blue-600 font-medium">
+                    {salaryReport.advanceAmount}
+                  </span>
+                </li>
+                <li className="flex justify-between">
+                  <span>Provident fund</span>
+                  <span className="text-blue-600 font-medium">
+                    {salaryReport.pf}
+                  </span>
                 </li>
                 <li className="flex justify-between">
                   <span>Other deduction</span>
-                  <span className="text-red-600 font-medium">500</span>
+                  <span className="text-red-600 font-medium"></span>
                 </li>
                 <li className="text-sm text-gray-500 italic">
-                  Reason: Uniform break
+                  {salaryReport.description}
                 </li>
               </ul>
 
               <div className="mt-4 border-t pt-3 flex justify-between text-gray-800 font-semibold">
                 <div className="flex flex-col">
                   <span>
-                    Net Deduction: <span className="text-red-700">2500</span>
+                    Net Deduction:{" "}
+                    <span className="text-red-700">
+                      {salaryReport.totalDeduction}
+                    </span>
                   </span>
-                  <span>Payable amount: {selectedEmployee.salary - 2500}</span>
+                  <span>Payable amount: {salaryReport.netSalary}</span>
                 </div>
               </div>
 

@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue: 0,
     },
     next_opening_balance: { type: DataTypes.DECIMAL(10, 2), defaultValue: 0 },
-    closed: { type: DataTypes.BOOLEAN, defaultValue: 0, allowNull: false },
+    closed: { type: DataTypes.TINYINT, defaultValue: 0, allowNull: false },
   });
   return DailyCashBalance;
 };

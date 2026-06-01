@@ -1,5 +1,9 @@
 import React, { useState } from "react";
-import { getSalaryReport, getPeriod } from "../api/salaryLedger";
+import {
+  getSalaryReport,
+  getPeriod,
+  downloadSalaryReport,
+} from "../api/salaryLedger";
 import { useEffect } from "react";
 
 const SalaryReport = ({ setIsActive }) => {
@@ -11,6 +15,15 @@ const SalaryReport = ({ setIsActive }) => {
   const normalizeDate = (dateStr) => {
     const [day, month, year] = dateStr.split("/");
     return `${year}-${month}-${day}`;
+  };
+
+  const handleReportDownload = async () => {
+    if (!setSelectedPeriod) return;
+    const { periodStart, periodEnd } = JSON.parse(selectedPeriod);
+    await downloadSalaryReport({
+      periodStart: normalizeDate(periodStart),
+      periodEnd: normalizeDate(periodEnd),
+    });
   };
 
   const fetchReports = async () => {
@@ -68,6 +81,12 @@ const SalaryReport = ({ setIsActive }) => {
           className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
         >
           Get All Reports
+        </button>
+        <button
+          onClick={handleReportDownload}
+          className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition"
+        >
+          Download Reports
         </button>
       </div>
 

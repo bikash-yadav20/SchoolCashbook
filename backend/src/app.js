@@ -16,6 +16,7 @@ const leaveRules = require("./routes/leaveRules");
 const deductionRulesRoutes = require("./routes/deductionRulesRoutes");
 const salaryLedgerRoute = require("./routes/salaryLedgerRoute");
 const xlsxExport = require("./routes/xlsxExport");
+const employeeSalaryReport = require("./routes/employeeSalartReport");
 
 const app = express();
 
@@ -54,6 +55,7 @@ app.use("/api/employee", employee);
 app.use("/api/leave-rules", leaveRules);
 app.use("/api/deduction-rules", deductionRulesRoutes);
 app.use("/api/payroll", salaryLedgerRoute);
+app.use("/api/employee-salary", employeeSalaryReport);
 app.use("/api/excel", xlsxExport);
 
 app.get("/health", (req, res) => res.json({ status: "ok" }));

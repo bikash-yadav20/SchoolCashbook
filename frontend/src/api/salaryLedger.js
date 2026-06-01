@@ -11,14 +11,19 @@ export const getSalaryReport = async ({ periodStart, periodEnd }) =>
 
 //get the period attributes
 export const getPeriod = async () => (await api.get("/payroll/period")).data;
-export const downloadSalaryReport = async (employeeId) => {
-  const response = await api.get(`/payroll/salary-full-report/${employeeId}`, {
-    responseType: "blob",
-  });
+
+//download excel file
+export const downloadSalaryReport = async ({ periodStart, periodEnd }) => {
+  const response = await api.post(
+    "/payroll/download-full-report",
+    { periodStart, periodEnd },
+    { responseType: "blob" },
+  );
+
   const url = window.URL.createObjectURL(new Blob([response.data]));
   const link = document.createElement("a");
   link.href = url;
-  link.setAttribute("download", `salary_report_${employeeId}.xlsx`);
+  link.setAttribute("download", "salary_report.xlsx");
   document.body.appendChild(link);
   link.click();
 };

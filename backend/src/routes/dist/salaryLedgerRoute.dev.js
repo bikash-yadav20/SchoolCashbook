@@ -11,7 +11,8 @@ var _require2 = require("../controllers/deductionController"),
     addDeduction = _require2.addDeduction;
 
 var _require3 = require("../controllers/fetchSalaryLedger"),
-    getSalaryReport = _require3.getSalaryReport;
+    getSalaryReport = _require3.getSalaryReport,
+    downloadSalaryReport = _require3.downloadSalaryReport;
 
 var _require4 = require("../controllers/getPeriod"),
     getPeriodData = _require4.getPeriodData;
@@ -19,5 +20,6 @@ var _require4 = require("../controllers/getPeriod"),
 router.post("/salary-ledger", generateMonthlySalary);
 router.post("/salary-deduction", addDeduction);
 router.post("/salary-full-report", getSalaryReport);
+router.post("/download-full-report", downloadSalaryReport);
 router.get("/period", getPeriodData);
 module.exports = router;

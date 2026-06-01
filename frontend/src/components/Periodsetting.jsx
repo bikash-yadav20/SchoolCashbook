@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { postSalaryLedger } from "../api/salaryLedger";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const Periodsetting = ({ setIsActive }) => {
   const [periodStart, setPeriodStart] = useState("");
@@ -19,8 +20,10 @@ const Periodsetting = ({ setIsActive }) => {
         periodEnd: normalizeDate(periodEnd),
       });
       console.log("Ledger created:", data);
+      toast.success("Salary period started");
     } catch (error) {
       console.error("Error creating ledger:", error);
+      toast.error("Failed to start salary period");
     }
   };
 

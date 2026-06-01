@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { allEmployees } from "../api/employee";
 import { createDeduction } from "../api/employeeDeductions";
+import { toast } from "react-toastify";
 
 const Emp_deduction = ({ setIsActive }) => {
   const today = new Date().toISOString().split("T")[0];
@@ -20,12 +21,22 @@ const Emp_deduction = ({ setIsActive }) => {
   };
 
   const createEmpDeduction = async (empDeduction) => {
+    if (
+      (!empDeduction.absent_days || empDeduction.absent_days === "") &&
+      (!empDeduction.late_days || empDeduction.late_days === "")
+    ) {
+      toast.error("Please enter absent or late days before submitting");
+      return; // stop execution
+    }
     try {
       const data = await createDeduction(empDeduction);
       console.log("Deduction created:", data);
+      toast.success("Deduction successfull");
     } catch (error) {
       console.error("Failed to add deduction", error);
+      toast.error(data.message || "Deduction failed");
     }
+    setDeductionData({});
   };
 
   //   fetchEmployees
@@ -77,6 +88,7 @@ const Emp_deduction = ({ setIsActive }) => {
                       onChange={(e) => handleChange(emp.employeeId, e)}
                       placeholder="Absent"
                       className="w-20 border rounded p-1"
+                      required
                     />
                   </td>
                   <td className="border p-2">
@@ -87,6 +99,7 @@ const Emp_deduction = ({ setIsActive }) => {
                       onChange={(e) => handleChange(emp.employeeId, e)}
                       placeholder="Late"
                       className="w-20 border rounded p-1"
+                      required
                     />
                   </td>
                   <td className="border p-2">

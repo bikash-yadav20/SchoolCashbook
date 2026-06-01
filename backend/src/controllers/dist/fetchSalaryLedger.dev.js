@@ -14,10 +14,13 @@ function _iterableToArrayLimit(arr, i) { if (!(Symbol.iterator in Object(arr) ||
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
+// controllers/fetchSalaryLedger.js
 var _require = require("../models"),
     Deduction = _require.Deduction,
     SalaryLedger = _require.SalaryLedger,
     Employee = _require.Employee;
+
+var ExcelJS = require("exceljs");
 
 function normalizeDate(dateStr) {
   if (dateStr.includes("/")) {
@@ -31,26 +34,21 @@ function normalizeDate(dateStr) {
   }
 
   return dateStr;
-}
+} // Shared helper
 
-exports.getSalaryReport = function _callee2(req, res) {
-  var employees, _req$body, periodStart, periodEnd, reports;
 
-  return regeneratorRuntime.async(function _callee2$(_context2) {
+function buildSalaryReports(periodStart, periodEnd) {
+  var employees;
+  return regeneratorRuntime.async(function buildSalaryReports$(_context2) {
     while (1) {
       switch (_context2.prev = _context2.next) {
         case 0:
-          _context2.prev = 0;
-          _context2.next = 3;
+          _context2.next = 2;
           return regeneratorRuntime.awrap(Employee.findAll());
 
-        case 3:
+        case 2:
           employees = _context2.sent;
-          _req$body = req.body, periodStart = _req$body.periodStart, periodEnd = _req$body.periodEnd;
-          periodStart = normalizeDate(periodStart);
-          periodEnd = normalizeDate(periodEnd);
-          _context2.next = 9;
-          return regeneratorRuntime.awrap(Promise.all(employees.map(function _callee(employee) {
+          return _context2.abrupt("return", Promise.all(employees.map(function _callee(employee) {
             var ledger, deductions, totals, netSalary;
             return regeneratorRuntime.async(function _callee$(_context) {
               while (1) {
@@ -89,7 +87,6 @@ exports.getSalaryReport = function _callee2(req, res) {
 
                   case 7:
                     deductions = _context.sent;
-                    // ✅ Aggregate totals
                     totals = {
                       absentDays: 0,
                       lateDays: 0,
@@ -125,24 +122,140 @@ exports.getSalaryReport = function _callee2(req, res) {
             });
           })));
 
-        case 9:
-          reports = _context2.sent;
-          res.status(200).json(reports);
-          _context2.next = 17;
-          break;
-
-        case 13:
-          _context2.prev = 13;
-          _context2.t0 = _context2["catch"](0);
-          console.error("Error generating salary reports", _context2.t0);
-          res.status(500).json({
-            error: _context2.t0.message
-          });
-
-        case 17:
+        case 4:
         case "end":
           return _context2.stop();
       }
     }
-  }, null, null, [[0, 13]]);
+  });
+} // JSON controller
+
+
+exports.getSalaryReport = function _callee2(req, res) {
+  var _req$body, periodStart, periodEnd, reports;
+
+  return regeneratorRuntime.async(function _callee2$(_context3) {
+    while (1) {
+      switch (_context3.prev = _context3.next) {
+        case 0:
+          _context3.prev = 0;
+          _req$body = req.body, periodStart = _req$body.periodStart, periodEnd = _req$body.periodEnd;
+          periodStart = normalizeDate(periodStart);
+          periodEnd = normalizeDate(periodEnd);
+          _context3.next = 6;
+          return regeneratorRuntime.awrap(buildSalaryReports(periodStart, periodEnd));
+
+        case 6:
+          reports = _context3.sent;
+          res.status(200).json(reports);
+          _context3.next = 14;
+          break;
+
+        case 10:
+          _context3.prev = 10;
+          _context3.t0 = _context3["catch"](0);
+          console.error("Error generating salary reports", _context3.t0);
+          res.status(500).json({
+            error: _context3.t0.message
+          });
+
+        case 14:
+        case "end":
+          return _context3.stop();
+      }
+    }
+  }, null, null, [[0, 10]]);
+}; // Excel controller
+
+
+exports.downloadSalaryReport = function _callee3(req, res) {
+  var _req$body2, periodStart, periodEnd, reports, workbook, worksheet;
+
+  return regeneratorRuntime.async(function _callee3$(_context4) {
+    while (1) {
+      switch (_context4.prev = _context4.next) {
+        case 0:
+          _context4.prev = 0;
+          _req$body2 = req.body, periodStart = _req$body2.periodStart, periodEnd = _req$body2.periodEnd;
+          periodStart = normalizeDate(periodStart);
+          periodEnd = normalizeDate(periodEnd);
+          _context4.next = 6;
+          return regeneratorRuntime.awrap(buildSalaryReports(periodStart, periodEnd));
+
+        case 6:
+          reports = _context4.sent;
+          workbook = new ExcelJS.Workbook();
+          worksheet = workbook.addWorksheet("Salary Report");
+          worksheet.columns = [{
+            header: "Employee ID",
+            key: "employeeId",
+            width: 15
+          }, {
+            header: "Name",
+            key: "name",
+            width: 25
+          }, {
+            header: "Gross Salary",
+            key: "grossSalary",
+            width: 15
+          }, {
+            header: "Absent Days",
+            key: "absentDays",
+            width: 15
+          }, {
+            header: "Absent Amount",
+            key: "absentAmount",
+            width: 15
+          }, {
+            header: "Late Days",
+            key: "lateDays",
+            width: 15
+          }, {
+            header: "Late Amount",
+            key: "lateAmount",
+            width: 15
+          }, {
+            header: "Advance Amount",
+            key: "advanceAmount",
+            width: 15
+          }, {
+            header: "PF Amount",
+            key: "pf",
+            width: 15
+          }, {
+            header: "Total Deduction",
+            key: "totalDeduction",
+            width: 20
+          }, {
+            header: "Net Salary",
+            key: "netSalary",
+            width: 15
+          }];
+          reports.forEach(function (report) {
+            return worksheet.addRow(report);
+          });
+          res.setHeader("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+          res.setHeader("Content-Disposition", "attachment; filename=salary_report.xlsx");
+          _context4.next = 15;
+          return regeneratorRuntime.awrap(workbook.xlsx.write(res));
+
+        case 15:
+          res.end();
+          _context4.next = 22;
+          break;
+
+        case 18:
+          _context4.prev = 18;
+          _context4.t0 = _context4["catch"](0);
+          console.error("Error generating Excel report", _context4.t0);
+          res.status(500).json({
+            error: _context4.t0.message
+          });
+
+        case 22:
+        case "end":
+          return _context4.stop();
+      }
+    }
+  }, null, null, [[0, 18]]);
 };
