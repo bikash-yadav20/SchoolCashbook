@@ -18,7 +18,6 @@ const Employee = sequelize.define(
     lastname: { type: DataTypes.STRING, allowNull: false },
     email: {
       type: DataTypes.STRING,
-      allowNull: false,
       unique: true,
       validate: { isEmail: true },
     },
@@ -28,10 +27,10 @@ const Employee = sequelize.define(
     salary: { type: DataTypes.FLOAT, allowNull: false },
     pf: { type: DataTypes.FLOAT, allowNull: false },
     DOB: { type: DataTypes.DATEONLY },
-    accountNumber: { type: DataTypes.STRING, allowNull: false },
-    ifsc: { type: DataTypes.STRING, allowNull: false },
-    presentAddress: { type: DataTypes.STRING, allowNull: false },
-    permanentAddress: { type: DataTypes.STRING, allowNull: false },
+    accountNumber: { type: DataTypes.STRING },
+    ifsc: { type: DataTypes.STRING },
+    presentAddress: { type: DataTypes.STRING },
+    permanentAddress: { type: DataTypes.STRING },
   },
   {
     tableName: "employees",

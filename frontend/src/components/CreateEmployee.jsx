@@ -62,7 +62,7 @@ const CreateEmployee = () => {
         "Error creating employee:",
         error.response?.data || error.message,
       );
-      toast.error("Error creating employee");
+      toast.error(error.response?.data?.message);
     }
   };
 
