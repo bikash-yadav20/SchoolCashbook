@@ -62,7 +62,18 @@ const CreateEmployee = () => {
         "Error creating employee:",
         error.response?.data || error.message,
       );
-      toast.error(error.response?.data?.message);
+
+      let backendMessage = error.response?.data?.message;
+
+      if (Array.isArray(backendMessage)) {
+        if (backendMessage.some((msg) => msg.includes("employeeId"))) {
+          backendMessage = "Employee ID must be 8 characters";
+        } else {
+          backendMessage = backendMessage.join(", ");
+        }
+      }
+
+      toast.error(backendMessage || error.message || "Something went wrong");
     }
   };
 
