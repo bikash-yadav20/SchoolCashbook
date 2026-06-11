@@ -1,5 +1,5 @@
-const Employee = require("../models/Employee");
-const SalaryLedger = require("../models/SalaryLedger");
+const { Employee, SalaryLedger } = require("../models");
+
 const { Op } = require("sequelize");
 const bcrypt = require("bcrypt");
 const { ValidationError, UniqueConstraintError } = require("sequelize");
