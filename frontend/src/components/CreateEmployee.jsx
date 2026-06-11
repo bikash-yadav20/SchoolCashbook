@@ -66,6 +66,7 @@ const CreateEmployee = () => {
       let backendMessage = error.response?.data?.message;
 
       if (Array.isArray(backendMessage)) {
+        // Replace the Sequelize validation error with a user-friendly message
         if (backendMessage.some((msg) => msg.includes("employeeId"))) {
           backendMessage = "Employee ID must be 8 characters";
         } else {
