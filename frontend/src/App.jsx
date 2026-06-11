@@ -1,6 +1,6 @@
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
@@ -24,6 +24,16 @@ import PayrollSetting from "./pages/PayrollSetting";
 import LedgerReport from "./pages/LedgerReport";
 
 function Layout({ children }) {
+  useEffect(() => {
+    const preventScroll = (e) => {
+      if (document.activeElement.type === "number") {
+        e.preventDefault(); // block scroll increment
+      }
+    };
+    window.addEventListener("wheel", preventScroll, { passive: false });
+    return () => window.removeEventListener("wheel", preventScroll);
+  }, []);
+
   const token = localStorage.getItem("token");
 
   const logout = () => {
