@@ -4,7 +4,7 @@ import { createDeduction } from "../api/employeeDeductions";
 import { empSalaryReport } from "../api/employeeSalaryReport.js";
 import { ToastContainer, toast } from "react-toastify";
 
-const EmployeeDetails = () => {
+const EmployeeDetails = ({ viewReport }) => {
   const today = new Date().toISOString().split("T")[0];
   const todayMonthDay = today.slice(5, 10);
 
@@ -153,8 +153,11 @@ const EmployeeDetails = () => {
 
                 {/* Right Section */}
                 <div className="flex flex-col gap-3">
-                  <button className="px-4 py-2 bg-gray-600 text-white font-semibold rounded-lg shadow hover:bg-gray-700 transition cursor-pointer">
-                    Open Ledger
+                  <button
+                    onClick={() => viewReport(emp)}
+                    className="px-4 py-2 bg-gray-600 text-white font-semibold rounded-lg shadow hover:bg-gray-700 transition cursor-pointer"
+                  >
+                    Open profile
                   </button>
                   <button
                     onClick={() => openReportPopup(emp)}

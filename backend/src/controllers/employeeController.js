@@ -1,4 +1,6 @@
 const Employee = require("../models/Employee");
+const SalaryLedger = require("../models/SalaryLedger");
+const { Op } = require("sequelize");
 const bcrypt = require("bcrypt");
 const { ValidationError, UniqueConstraintError } = require("sequelize");
 
@@ -63,5 +65,41 @@ exports.getEmployees = async (req, res) => {
     res
       .status(500)
       .json("unable to fetch employee", error.response?.data, error.message);
+  }
+};
+
+//update employee
+
+exports.updateEmployee = async (req, res) => {
+  try {
+    const { employeeId } = req.params;
+    const updates = req.body;
+
+    const employee = await Employee.findOne({ where: { employeeId } });
+    if (!employee) {
+      return res.status(404).json({ error: "Employee not found" });
+    }
+
+    // Update employee master record
+    await employee.update(updates);
+
+    // If salary is being updated, also update current ledger
+    if (updates.salary) {
+      await SalaryLedger.update(
+        { payableAmount: updates.salary },
+        {
+          where: {
+            employeeId,
+            periodStart: { [Op.lte]: new Date() },
+            periodEnd: { [Op.gte]: new Date() },
+          },
+        },
+      );
+    }
+
+    res.status(200).json({ message: "Updated successfully", employee });
+  } catch (error) {
+    console.error("Error updating employee:", error);
+    res.status(500).json({ error: error.message });
   }
 };

@@ -4,7 +4,7 @@ import api from "./client";
 export const postSalaryLedger = async ({ periodStart, periodEnd }) =>
   await api.post("/payroll/salary-ledger", { periodStart, periodEnd });
 
-// Get full salary report for an employee (JSON + Excel download)
+// Get full salary report
 export const getSalaryReport = async ({ periodStart, periodEnd }) =>
   (await api.post("/payroll/salary-full-report", { periodStart, periodEnd }))
     .data;
@@ -26,4 +26,16 @@ export const downloadSalaryReport = async ({ periodStart, periodEnd }) => {
   link.setAttribute("download", "salary_report.xlsx");
   document.body.appendChild(link);
   link.click();
+};
+
+//get salary report for an employee
+
+export const getEmployeeSalary = async (employeeId) => {
+  try {
+    const response = await api.get(`/payroll/salary-report/${employeeId}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching employee salary report", error);
+    throw error;
+  }
 };

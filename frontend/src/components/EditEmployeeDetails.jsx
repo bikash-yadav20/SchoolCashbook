@@ -1,29 +1,29 @@
 import React, { useState } from "react";
-import { createEmployee } from "../api/employee";
 import { toast } from "react-toastify";
+import InputField from "./InputField";
+import { updateEmployee } from "../api/employee";
 
-const CreateEmployee = () => {
+const EditEmployeeDetails = ({ employee }) => {
   const [formData, setFormData] = useState({
-    firstname: "",
-    lastname: "",
-    employeeId: "",
-    email: "",
-    phone: "",
+    firstname: employee?.firstname || "",
+    lastname: employee?.lastname || "",
+    employeeId: employee?.employeeId || "",
+    email: employee?.email || "",
+    phone: employee?.phone || "",
     password: "",
-    designation: "",
-    salary: "",
-    pf: "",
-    DOB: "",
-    accountNumber: "",
-    ifsc: "",
-    presentAddress: "",
-    permanentAddress: "",
+    salary: employee?.salary || "",
+    pf: employee?.pf || "",
+    DOB: employee?.DOB || "",
+    designation: employee?.designation || "",
+    accountNumber: employee?.accountNumber || "",
+    ifsc: employee?.ifsc || "",
+    presentAddress: employee?.presentAddress || "",
+    permanentAddress: employee?.permanentAddress || "",
     profile: null,
   });
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
-
     if (files) {
       setFormData({ ...formData, [name]: files[0] });
     } else {
@@ -34,35 +34,11 @@ const CreateEmployee = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const data = new FormData();
-      Object.entries(formData).forEach(([key, value]) => {
-        data.append(key, value);
-      });
-      const response = await createEmployee(data);
-      toast.success("Employee created successfully");
-      setFormData({
-        firstname: "",
-        lastname: "",
-        employeeId: "",
-        email: "",
-        phone: "",
-        password: "",
-        designation: "",
-        salary: "",
-        pf: "",
-        DOB: "",
-        accountNumber: "",
-        ifsc: "",
-        presentAddress: "",
-        permanentAddress: "",
-        profile: null,
-      });
+      const updated = await updateEmployee(formData, employee.employeeId);
+      toast.success("Employee updated successfully");
+      console.log("Update done", updated);
     } catch (error) {
-      console.log(
-        "Error creating employee:",
-        error.response?.data || error.message,
-      );
-      toast.error(error.response?.data?.message);
+      toast.error(error.response?.data?.error || "Update failed");
     }
   };
 
@@ -72,10 +48,10 @@ const CreateEmployee = () => {
         {/* Header */}
         <div className="mb-8 text-center">
           <h2 className="text-3xl font-bold text-gray-800">
-            Create New Employee
+            Edit Employee Details
           </h2>
           <p className="text-gray-500 mt-2">
-            Fill in the details to register a new employee
+            Update the details of the employee
           </p>
         </div>
 
@@ -165,17 +141,18 @@ const CreateEmployee = () => {
                 value={formData.DOB}
                 onChange={handleChange}
               />
-              <div className="flex">
+              <div className="flex flex-col">
                 <label htmlFor="designation">Designation</label>
                 <select
                   name="designation"
                   id="designation"
                   value={formData.designation}
                   onChange={handleChange}
+                  className="border rounded px-3 py-2"
                 >
-                  <option value="principle"> Principal</option>
+                  <option value="principle">Principal</option>
                   <option value="teacher">Teacher</option>
-                  <option value="assistant-teacher">Assistant-teacher</option>
+                  <option value="assistant-teacher">Assistant Teacher</option>
                   <option value="office-employee">Office Employee</option>
                   <option value="grade-iv">Grade IV</option>
                 </select>
@@ -188,7 +165,6 @@ const CreateEmployee = () => {
             <h3 className="text-lg font-semibold text-gray-700 mb-4 border-b pb-2">
               Bank Details
             </h3>
-
             <div className="grid md:grid-cols-2 gap-6">
               <InputField
                 label="Account Number"
@@ -211,7 +187,6 @@ const CreateEmployee = () => {
             <h3 className="text-lg font-semibold text-gray-700 mb-4 border-b pb-2">
               Address Details
             </h3>
-
             <div className="grid md:grid-cols-2 gap-6">
               <InputField
                 label="Present Address"
@@ -243,22 +218,4 @@ const CreateEmployee = () => {
   );
 };
 
-/* Reusable Input Component */
-const InputField = ({ label, name, type = "text", value, onChange }) => (
-  <div>
-    <label className="block text-sm font-medium text-gray-700 mb-1">
-      {label}
-    </label>
-    <input
-      name={name}
-      type={type}
-      value={value}
-      onChange={onChange}
-      required
-      className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
-    />
-    {error && <p className="text-red-500 text-xs mt-1">{error}</p>}
-  </div>
-);
-
-export default CreateEmployee;
+export default EditEmployeeDetails;
