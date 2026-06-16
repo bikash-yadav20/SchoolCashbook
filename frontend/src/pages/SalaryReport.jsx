@@ -6,9 +6,8 @@ import {
 } from "../api/salaryLedger";
 import { useEffect } from "react";
 
-const SalaryReport = ({ setIsActive }) => {
+const SalaryReport = ({ setIsActive, periodOptions }) => {
   const [reports, setReports] = useState([]);
-  const [periodOptions, setPeriodOptions] = useState([]);
   const [selectedPeriod, setSelectedPeriod] = useState("");
   console.log("sss", reports);
 
@@ -37,19 +36,6 @@ const SalaryReport = ({ setIsActive }) => {
     setReports(data);
     console.log(data);
   };
-
-  useEffect(() => {
-    const fetchPeriod = async () => {
-      try {
-        const options = await getPeriod();
-        setPeriodOptions(options);
-        console.log(options);
-      } catch (error) {
-        console.error("error fetching options", error);
-      }
-    };
-    fetchPeriod();
-  }, []);
 
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
@@ -95,33 +81,35 @@ const SalaryReport = ({ setIsActive }) => {
           <table className="min-w-full bg-white border border-gray-200 rounded-lg shadow-sm">
             <thead className="bg-gray-100">
               <tr>
-                <th>Employee ID</th>
-                <th>Name</th>
-                <th>Gross Salary</th>
-                <th>Absent Days</th>
-                <th>Absent Amount</th>
-                <th>Late Days</th>
-                <th>Late Amount</th>
-                <th>Advance Amount</th>
-                <th>Pf Amount</th>
-                <th>Total Deduction</th>
-                <th>Net Salary</th>
+                <th className="border p-2">Employee ID</th>
+                <th className="border p-2">Status</th>
+                <th className="border p-2">Name</th>
+                <th className="border p-2">Gross Salary</th>
+                <th className="border p-2">Absent Days</th>
+                <th className="border p-2">Absent Amount</th>
+                <th className="border p-2">Late Days</th>
+                <th className="border p-2">Late Amount</th>
+                <th className="border p-2">Advance Amount</th>
+                <th className="border p-2">Pf Amount</th>
+                <th className="border p-2">Total Deduction</th>
+                <th className="border p-2">Net Salary</th>
               </tr>
             </thead>
             <tbody>
               {reports.map((r) => (
                 <tr key={r.employeeId} className="hover:bg-gray-50">
-                  <td>{r.employeeId}</td>
-                  <td>{r.name}</td>
-                  <td>{r.grossSalary}</td>
-                  <td>{r.absentDays}</td>
-                  <td>{r.absentAmount}</td>
-                  <td>{r.lateDays}</td>
-                  <td>{r.lateAmount}</td>
-                  <td>{r.advanceAmount}</td>
-                  <td>{r.pf}</td>
-                  <td>{r.totalDeduction}</td>
-                  <td className="font-semibold text-green-700">
+                  <td className="border p-2">{r.employeeId}</td>
+                  <td className="border p-2">{r.status}</td>
+                  <td className="border p-2">{r.name}</td>
+                  <td className="border p-2">{r.grossSalary}</td>
+                  <td className="border p-2">{r.absentDays}</td>
+                  <td className="border p-2">{r.absentAmount}</td>
+                  <td className="border p-2">{r.lateDays}</td>
+                  <td className="border p-2">{r.lateAmount}</td>
+                  <td className="border p-2">{r.advanceAmount}</td>
+                  <td className="border p-2">{r.pf}</td>
+                  <td className="border p-2">{r.totalDeduction}</td>
+                  <td className=" border p-2 font-semibold text-green-700">
                     {r.netSalary}
                   </td>
                 </tr>

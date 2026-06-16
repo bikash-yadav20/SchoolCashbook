@@ -10,6 +10,10 @@ export const updateEmployee = async (payload, employeeId) => {
   );
   return response.data;
 };
+/* fetch employees period wise */
+export const allEmployees = async (periodStart, periodEnd) =>
+  (await api.get(`/employee/all-employees/${periodStart}/${periodEnd}`)).data;
 
-export const allEmployees = async () =>
-  (await api.get("/employee/all-employees")).data;
+/* fetch all employees */
+export const employeeList = async (empStatus) =>
+  (await api.get(`/employee/employees-list/${empStatus}`)).data;

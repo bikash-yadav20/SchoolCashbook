@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { getEmployeeSalary } from "../api/salaryLedger";
+import { updateEmployee } from "../api/employee";
+import exitLogo from "../assets/exit.png";
+import { toast } from "react-toastify";
 
 const SalaryReportByEmp = ({ employee, setEditTrue }) => {
   const [reports, setReports] = useState([]);
-
   const fetchReport = async (employeeId = employee.employeeId) => {
     try {
       const data = await getEmployeeSalary(employeeId);
@@ -14,6 +16,19 @@ const SalaryReportByEmp = ({ employee, setEditTrue }) => {
   };
   console.log(reports);
   console.table(reports);
+
+  // exit employee
+  const exitEmployee = async (employeeId = employee.employeeId) => {
+    const confirmation = confirm(`Are you sure to remove ${employeeId}`);
+    if (!confirmation) return;
+    try {
+      await updateEmployee({ status: "exited" }, employeeId);
+      toast.success("Employee removed successfully");
+    } catch (error) {
+      console.error("error removing employee", error);
+      toast("Failed to remove employee");
+    }
+  };
 
   useEffect(() => {
     if (employee?.employeeId) {
@@ -27,12 +42,21 @@ const SalaryReportByEmp = ({ employee, setEditTrue }) => {
           <h2 className="text-2xl">
             Salary report for {employee.firstname} {employee.lastname}{" "}
           </h2>
-          <button
-            onClick={() => setEditTrue(true)}
-            className="bg-red-500 rounded px-2 py-2 hover:bg-red-400 cursor-pointer"
-          >
-            Edit profile
-          </button>
+          <div className="flex items-center  gap-6">
+            <button
+              onClick={(e) => exitEmployee()}
+              className="flex flex-col border-2 hover:border-red-500 cursor-pointer text-sm font-mono font-semibold"
+            >
+              <img className="w-8 h-auto" src={exitLogo} alt="" />
+              Exit
+            </button>
+            <button
+              onClick={() => setEditTrue(true)}
+              className="bg-red-500 rounded px-2 py-2 hover:bg-red-400 cursor-pointer"
+            >
+              Edit profile
+            </button>
+          </div>
         </div>
         <div className="flex items-center gap-6 bg-white shadow-md rounded-lg p-6 m-4">
           <p className="text-blue-600 font-semibold text-lg">
@@ -87,8 +111,12 @@ const SalaryReportByEmp = ({ employee, setEditTrue }) => {
                   <td className="border p-2 font-semibold text-green-700">
                     {r.netSalary}
                   </td>
-                  <td className="border p-2 text-red-600 font-semibold">
-                    unpaid
+                  <td className="border p-2">
+                    {r.paymentStatus === "Paid" ? (
+                      <p className="text-green-500 font-semibold">Paid</p>
+                    ) : (
+                      <p className="text-red-500 font-semibold">Unpaid</p>
+                    )}
                   </td>
                 </tr>
               ))}

@@ -15,7 +15,7 @@ const SalaryLedger = sequelize.define(
     periodStart: { type: DataTypes.DATEONLY, allowNull: false },
     periodEnd: { type: DataTypes.DATEONLY, allowNull: false },
     paidDate: DataTypes.DATE,
-    isPaid: { type: DataTypes.BOOLEAN, defaultValue: false },
+    isPaid: { type: DataTypes.TINYINT, defaultValue: 0 },
   },
   {
     tableName: "salary_ledgers",

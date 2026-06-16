@@ -22,6 +22,7 @@ import Emp_deduction from "./components/Emp_deduction";
 import SalaryReport from "./pages/SalaryReport";
 import PayrollSetting from "./pages/PayrollSetting";
 import LedgerReport from "./pages/LedgerReport";
+import { getPeriod } from "./api/salaryLedger";
 
 function Layout({ children }) {
   useEffect(() => {
@@ -137,6 +138,22 @@ function Layout({ children }) {
 }
 
 export default function App() {
+  // fetching period
+  const [periodOptions, setPeriodOptions] = useState([]);
+
+  useEffect(() => {
+    const fetchPeriod = async () => {
+      try {
+        const options = await getPeriod();
+        setPeriodOptions(options);
+        console.log(options);
+      } catch (error) {
+        console.error("error fetching options", error);
+      }
+    };
+    fetchPeriod();
+  }, []);
+
   return (
     <AuthProvider>
       <BrowserRouter>
@@ -238,7 +255,7 @@ export default function App() {
             element={
               <ProtectedRoute>
                 <Layout>
-                  <PayrollSetting />
+                  <PayrollSetting periodOptions={periodOptions} />
                 </Layout>
               </ProtectedRoute>
             }
@@ -258,7 +275,7 @@ export default function App() {
             element={
               <ProtectedRoute>
                 <Layout>
-                  <SalaryReport />
+                  <SalaryReport periodOptions={periodOptions} />
                 </Layout>
               </ProtectedRoute>
             }

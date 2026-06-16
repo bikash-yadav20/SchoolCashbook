@@ -54,12 +54,39 @@ exports.createEmployee = async (req, res) => {
     });
   }
 };
+/* get all employee details */
 
-//get employee
+exports.employeeList = async (req, res) => {
+  try {
+    const { empStatus } = req.params;
+    const employees = await Employee.findAll({
+      where: { status: empStatus },
+    });
+    res.status(200).json({
+      message: "employees fetched successfully",
+      employees,
+    });
+  } catch (error) {
+    console.error("failed to fetch employee", error);
+    res.status(500).json({ message: "unable to fetch employees" });
+  }
+};
+
+//get employee period wise
 
 exports.getEmployees = async (req, res) => {
   try {
-    const employees = await Employee.findAll();
+    const { periodStart, periodEnd } = req.params;
+    const ledger = await SalaryLedger.findAll({
+      where: { periodStart: periodStart, periodEnd: periodEnd },
+      attributes: ["employeeId", "isPaid"],
+    });
+
+    const employeeIds = ledger.map((l) => l.employeeId);
+
+    const employees = await Employee.findAll({
+      where: { employeeId: employeeIds },
+    });
     res.status(200).json(employees);
   } catch (error) {
     res
@@ -79,11 +106,10 @@ exports.updateEmployee = async (req, res) => {
     if (!employee) {
       return res.status(404).json({ error: "Employee not found" });
     }
+    console.log(updates);
 
-    // Update employee master record
     await employee.update(updates);
 
-    // If salary is being updated, also update current ledger
     if (updates.salary) {
       await SalaryLedger.update(
         { payableAmount: updates.salary },

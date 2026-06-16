@@ -70,3 +70,49 @@ exports.generateMonthlySalary = async (req, res) => {
     res.status(400).json({ error: err.message });
   }
 };
+
+//Mark a paid
+
+exports.markPaid = async (req, res) => {
+  try {
+    const { isPaid, periodStart, periodEnd } = req.body;
+    const { employeeId } = req.params;
+    await SalaryLedger.update(
+      { isPaid },
+      {
+        where: {
+          employeeId: employeeId,
+          periodStart: periodStart,
+          periodEnd: periodEnd,
+        },
+      },
+    );
+    res.json({ message: "Payment successfull" });
+  } catch (error) {
+    res.status(500).json({ message: "Payment failed" });
+    console.log("Incoming payload:", req.params, req.body);
+  }
+};
+
+/* get payment status */
+
+exports.getPaymentStatus = async (req, res) => {
+  try {
+    const { periodStart, periodEnd } = req.params;
+
+    const ledgers = await SalaryLedger.findAll({
+      where: { periodStart, periodEnd },
+      attributes: ["employeeId", "isPaid"],
+    });
+
+    const statusList = ledgers.map((ledger) => ({
+      employeeId: ledger.employeeId,
+      status: ledger.isPaid ? "Paid" : "Unpaid",
+    }));
+
+    res.json({ statusList });
+  } catch (error) {
+    console.error("unable to detect status", error);
+    res.status(500).json({ message: "Failed to fetch payment status" });
+  }
+};

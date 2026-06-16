@@ -5,11 +5,13 @@ const {
   createEmployee,
   getEmployees,
   updateEmployee,
+  employeeList,
 } = require("../controllers/employeeController");
 const upload = require("../middleware/multer/multer");
 
 router.post("/create-employee", upload.single("profile"), auth, createEmployee);
 router.put("/update-employee/:employeeId", auth, updateEmployee);
-router.get("/all-employees", auth, getEmployees);
+router.get("/employees-list/:empStatus", employeeList);
+router.get("/all-employees/:periodStart/:periodEnd", getEmployees);
 
 module.exports = router;

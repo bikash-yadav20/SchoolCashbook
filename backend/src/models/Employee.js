@@ -31,6 +31,11 @@ const Employee = sequelize.define(
     ifsc: { type: DataTypes.STRING },
     presentAddress: { type: DataTypes.STRING },
     permanentAddress: { type: DataTypes.STRING },
+    status: {
+      type: DataTypes.STRING,
+      defaultValue: "active",
+      allowNull: false,
+    },
   },
   {
     tableName: "employees",

@@ -63,6 +63,7 @@ async function buildSalaryReports(periodStart, periodEnd) {
         employeeId: employee.employeeId,
         name: `${employee.firstname} ${employee.lastname}`,
         grossSalary: ledger.payableAmount,
+        status: employee.status,
         ...totals,
         netSalary,
       };
@@ -179,6 +180,7 @@ const buildReportsForEmployee = async (employee) => {
         periodStart: ledger.periodStart,
         periodEnd: ledger.periodEnd,
         grossSalary: ledger.payableAmount,
+        paymentStatus: ledger.isPaid ? "Paid" : "Unpaid",
         ...totals,
         netSalary,
       };

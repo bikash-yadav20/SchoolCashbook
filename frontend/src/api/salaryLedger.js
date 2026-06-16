@@ -39,3 +39,29 @@ export const getEmployeeSalary = async (employeeId) => {
     throw error;
   }
 };
+
+/* mark as paid on deductions completions */
+export const markPaid = async (employeeId, payload) => {
+  try {
+    const response = await api.put(
+      `/payroll/update-payment/${employeeId}`,
+      payload,
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Payment failed");
+    throw error;
+  }
+};
+
+export const paymentStatus = async (periodStart, periodEnd) => {
+  try {
+    const response = await api.get(
+      `/payroll/payment-status/${periodStart}/${periodEnd}`,
+    );
+    return response.data;
+  } catch (error) {
+    console.error("error getting status");
+    throw error;
+  }
+};
