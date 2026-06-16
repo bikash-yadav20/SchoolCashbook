@@ -100,7 +100,7 @@ exports.downloadSalaryReport = async (req, res) => {
 
     worksheet.columns = [
       { header: "Employee ID", key: "employeeId", width: 15 },
-      { header: "Status", key: "employeeId", width: 15 },
+      { header: "Status", key: "status", width: 15 },
       { header: "Name", key: "name", width: 25 },
       { header: "Gross Salary", key: "grossSalary", width: 15 },
       { header: "Absent Days", key: "absentDays", width: 15 },
