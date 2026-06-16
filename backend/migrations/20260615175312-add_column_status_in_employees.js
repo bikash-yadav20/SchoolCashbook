@@ -7,7 +7,7 @@ module.exports = {
       type: Sequelize.STRING,
       defaultValue: "active",
       allowNull: false,
-      after: permanentAddress,
+      after: "permanentAddress",
     });
   },
 
