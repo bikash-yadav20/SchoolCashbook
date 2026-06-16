@@ -123,7 +123,7 @@ const EmployeeDetails = ({ viewReport }) => {
             className="border border-gray-300 rounded-lg bg-white px-4 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-400"
           >
             <option value="all department">All Department</option>
-            <option value="principle">Principal</option>
+            <option value="principal">Principal</option>
             <option value="vice principle">Vice principal</option>
             <option value="teacher">Teacher</option>
             <option value="assistant-teacher">Assistant Teacher</option>
