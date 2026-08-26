@@ -191,7 +191,7 @@ export default function App() {
             }
           />
           <Route
-            path="/report"
+            path="report"
             element={
               <ProtectedRoute>
                 <Layout>
@@ -211,7 +211,7 @@ export default function App() {
             }
           />
           <Route
-            path="/summary"
+            path="summary"
             element={
               <ProtectedRoute>
                 <Layout>
