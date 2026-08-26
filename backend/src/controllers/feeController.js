@@ -1,4 +1,4 @@
-const { Fee, DailyCashBalance } = require(".../models");
+const { Fee, DailyCashBalance } = require("../models");
 const { feeSchema } = require("../middleware/validate");
 
 //Helper function for data comparison----
